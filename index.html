@@ -305,14 +305,16 @@
   .services{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
+    gap:0;
+    border-top:1px solid var(--line);
+    border-left:1px solid var(--line);
   }
   .service-card{
     background:var(--black);
     padding:48px 38px;
     transition:background 0.3s ease;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
   }
   .service-card:hover{ background:var(--panel); }
   .service-num{
@@ -503,6 +505,27 @@
     text-align:center;
   }
 
+  .existing-client-nudge{
+    margin-top:36px;
+    text-align:center;
+    font-size:0.9rem;
+    color:var(--muted-2);
+  }
+  .existing-client-nudge a{
+    color:var(--gold-light);
+    font-weight:600;
+    border-bottom:1px solid transparent;
+    transition:border-color 0.25s ease;
+  }
+  .existing-client-nudge a:hover{ border-color:var(--gold-light); }
+
+  /* ---------- REQUEST A CHANGE ---------- */
+  .requests-section{
+    background:var(--panel);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+
   /* ---------- FOOTER ---------- */
   footer{
     border-top:1px solid var(--line);
@@ -539,6 +562,7 @@
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 900px){
     .services{ grid-template-columns:1fr; }
+    .service-card{ border-right:none; }
     .process-track{ grid-template-columns:1fr; gap:56px; }
     .process-line, .process-fill{ display:none; }
     .about{ grid-template-columns:1fr; gap:36px; }
@@ -563,6 +587,7 @@
       <li><a href="#services">Services</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#requests">Existing Client</a></li>
     </ul>
     <a href="#contact" class="nav-cta">Start a Project</a>
   </nav>
@@ -745,6 +770,69 @@
         <button type="submit" class="btn-primary">Send It Over</button>
         <p class="form-note">Prefer email? Reach out directly and we'll take it from there.</p>
       </form>
+
+      <p class="existing-client-nudge reveal">Already a client? <a href="#requests">Request a change instead →</a></p>
+    </div>
+  </section>
+
+  <!-- REQUEST A CHANGE (existing clients) -->
+  <section id="requests" class="requests-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">For Existing Clients</span>
+        <h2 class="display" style="text-transform:none;">Need something changed?</h2>
+        <p>Already working with us? Tell us what needs to update on your site, part, or model, and we'll get it scheduled — no need to start a new project.</p>
+      </div>
+
+      <form class="contact-form request-form reveal" id="requestForm" onsubmit="return handleRequestSubmit(event)">
+        <div class="form-row">
+          <div>
+            <label for="req-name">Name</label>
+            <input type="text" id="req-name" name="name" required>
+          </div>
+          <div>
+            <label for="req-site">Site / Project Name</label>
+            <input type="text" id="req-site" name="site" required placeholder="e.g. Vaughn Sweetz">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="req-email">Email</label>
+            <input type="email" id="req-email" name="email" required>
+          </div>
+          <div>
+            <label for="req-url">Site URL (if applicable)</label>
+            <input type="text" id="req-url" name="url" placeholder="maskedocho.github.io/...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="req-changetype">Type of Change</label>
+            <select id="req-changetype" name="changetype">
+              <option>Content Update (text, images, prices)</option>
+              <option>Design Change</option>
+              <option>Bug / Something's Broken</option>
+              <option>New Feature</option>
+              <option>3D Print / CAD Revision</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="req-urgency">Urgency</label>
+            <select id="req-urgency" name="urgency">
+              <option>No rush</option>
+              <option>This week</option>
+              <option>Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="full">
+          <label for="req-message">Describe the change</label>
+          <textarea id="req-message" name="message" required placeholder="What needs to change, and where?"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Submit Request</button>
+        <p class="form-note">Have a screenshot to share? Reply to your confirmation email with it attached.</p>
+      </form>
     </div>
   </section>
 
@@ -794,6 +882,21 @@
       btn.style.opacity = '1';
       e.target.reset();
     }, 2400);
+  }
+
+  // existing-client change request handling (placeholder — wire to FormNX/webhook later)
+  function handleRequestSubmit(e){
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const original = btn.textContent;
+    btn.textContent = 'Request Sent ✓';
+    btn.style.opacity = '0.7';
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.opacity = '1';
+      e.target.reset();
+    }, 2400);
+    return false;
   }
 </script>
 
