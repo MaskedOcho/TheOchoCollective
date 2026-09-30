@@ -505,25 +505,39 @@
     text-align:center;
   }
 
-  .existing-client-nudge{
-    margin-top:36px;
-    text-align:center;
-    font-size:0.9rem;
-    color:var(--muted-2);
-  }
-  .existing-client-nudge a{
-    color:var(--gold-light);
-    font-weight:600;
-    border-bottom:1px solid transparent;
-    transition:border-color 0.25s ease;
-  }
-  .existing-client-nudge a:hover{ border-color:var(--gold-light); }
-
-  /* ---------- REQUEST A CHANGE ---------- */
-  .requests-section{
+  /* ---------- CLIENT FORMS TOGGLE ---------- */
+  .anchor-offset{ display:block; height:0; }
+  .form-toggle{
+    display:inline-flex;
+    margin:0 auto 32px;
+    border:1px solid var(--line);
     background:var(--panel);
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
+    padding:4px;
+    gap:4px;
+  }
+  .form-toggle button{
+    font-family:'Archivo', sans-serif;
+    font-weight:700;
+    font-size:0.8rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    background:transparent;
+    border:0;
+    padding:14px 26px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .form-toggle button:hover{ color:var(--white); }
+  .form-toggle button[aria-selected="true"]{
+    background:var(--gold);
+    color:var(--black);
+  }
+  .form-toggle button:focus-visible{ outline:2px solid var(--gold-light); outline-offset:2px; }
+  .form-panel[hidden]{ display:none; }
+  @media (max-width:520px){
+    .form-toggle{ display:flex; }
+    .form-toggle button{ flex:1; padding:14px 10px; font-size:0.72rem; }
   }
   .form-embed{
     max-width:720px;
@@ -749,45 +763,42 @@
 
   <div class="wrap"><div class="rule"></div></div>
 
-  <!-- CONTACT -->
+  <!-- CONTACT / CLIENT FORMS (new + existing, one section with a toggle) -->
   <section id="contact" class="contact">
+    <span id="requests" class="anchor-offset" aria-hidden="true"></span>
     <div class="wrap">
       <div class="reveal">
-        <span class="eyebrow" style="display:block;margin-bottom:18px;">Get Started</span>
-        <h2 class="display">Let's build <span class="accent">something real.</span></h2>
-        <p class="lead">Tell us about your business and what your site needs to do. We'll follow up within one business day.</p>
+        <span class="eyebrow" style="display:block;margin-bottom:18px;" id="formEyebrow">Get Started</span>
+        <h2 class="display" id="formTitle">Let's build <span class="accent">something real.</span></h2>
+        <p class="lead" id="formLead">Tell us about your business and what you need built. We'll follow up within one business day.</p>
       </div>
 
-      <div class="form-embed reveal">
-        <iframe
-          src="https://fill.formnx.com/f/new-client-request-30eb68"
-          title="New Client Project Request Form"
-          loading="lazy"
-          allow="clipboard-write"></iframe>
-      </div>
-      <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/new-client-request-30eb68" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
-
-      <p class="existing-client-nudge reveal">Already a client? <a href="#requests">Request a change instead →</a></p>
-    </div>
-  </section>
-
-  <!-- REQUEST A CHANGE (existing clients) -->
-  <section id="requests" class="requests-section">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">For Existing Clients</span>
-        <h2 class="display" style="text-transform:none;">Need something changed?</h2>
-        <p>Already working with us? Tell us what needs to update on your site, part, or model, and we'll get it scheduled. No need to start a new project.</p>
+      <div class="form-toggle reveal" role="tablist" aria-label="Choose a form">
+        <button type="button" role="tab" id="tab-new" aria-controls="panel-new" aria-selected="true">Start a New Project</button>
+        <button type="button" role="tab" id="tab-existing" aria-controls="panel-existing" aria-selected="false" tabindex="-1">Existing Client Request</button>
       </div>
 
-      <div class="form-embed reveal">
-        <iframe
-          src="https://fill.formnx.com/f/existing-client-form-39ab15"
-          title="Existing Client Change Request Form"
-          loading="lazy"
-          allow="clipboard-write"></iframe>
+      <div class="form-panel" role="tabpanel" id="panel-new" aria-labelledby="tab-new">
+        <div class="form-embed">
+          <iframe
+            src="https://fill.formnx.com/f/new-client-request-30eb68"
+            title="New Client Project Request Form"
+            loading="lazy"
+            allow="clipboard-write"></iframe>
+        </div>
+        <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/new-client-request-30eb68" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
       </div>
-      <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/existing-client-form-39ab15" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
+
+      <div class="form-panel" role="tabpanel" id="panel-existing" aria-labelledby="tab-existing" hidden>
+        <div class="form-embed">
+          <iframe
+            src="https://fill.formnx.com/f/existing-client-form-39ab15"
+            title="Existing Client Change Request Form"
+            loading="lazy"
+            allow="clipboard-write"></iframe>
+        </div>
+        <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/existing-client-form-39ab15" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
+      </div>
     </div>
   </section>
 
@@ -824,6 +835,52 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
+
+  // client forms toggle: #contact opens the new-project form, #requests the existing-client form
+  const formCopy = {
+    new: {
+      eyebrow: 'Get Started',
+      title: 'Let\'s build <span class="accent">something real.</span>',
+      lead: 'Tell us about your business and what you need built. We\'ll follow up within one business day.'
+    },
+    existing: {
+      eyebrow: 'For Existing Clients',
+      title: 'Need something <span class="accent">changed?</span>',
+      lead: 'Tell us what needs to update on your site, part, or model, and we\'ll get it scheduled. No need to start a new project.'
+    }
+  };
+  const formTabs = { new: document.getElementById('tab-new'), existing: document.getElementById('tab-existing') };
+
+  function showForm(which, focusTab){
+    Object.keys(formTabs).forEach(key => {
+      const active = key === which;
+      formTabs[key].setAttribute('aria-selected', active);
+      formTabs[key].tabIndex = active ? 0 : -1;
+      document.getElementById('panel-' + key).hidden = !active;
+    });
+    document.getElementById('formEyebrow').textContent = formCopy[which].eyebrow;
+    document.getElementById('formTitle').innerHTML = formCopy[which].title;
+    document.getElementById('formLead').textContent = formCopy[which].lead;
+    if(focusTab){ formTabs[which].focus(); }
+  }
+
+  formTabs.new.addEventListener('click', () => showForm('new'));
+  formTabs.existing.addEventListener('click', () => showForm('existing'));
+  document.querySelector('.form-toggle').addEventListener('keydown', e => {
+    if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+      showForm(formTabs.new.getAttribute('aria-selected') === 'true' ? 'existing' : 'new', true);
+    }
+  });
+
+  function syncFormToHash(){
+    if(location.hash === '#requests'){ showForm('existing'); }
+    else if(location.hash === '#contact'){ showForm('new'); }
+  }
+  document.querySelectorAll('a[href="#requests"], a[href="#contact"]').forEach(link => {
+    link.addEventListener('click', () => showForm(link.getAttribute('href') === '#requests' ? 'existing' : 'new'));
+  });
+  window.addEventListener('hashchange', syncFormToHash);
+  syncFormToHash();
 </script>
 
 </body>
