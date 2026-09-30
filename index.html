@@ -525,6 +525,27 @@
     border-top:1px solid var(--line);
     border-bottom:1px solid var(--line);
   }
+  .form-embed{
+    max-width:720px;
+    margin:0 auto;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,0.45);
+  }
+  .form-embed iframe{
+    display:block;
+    width:100%;
+    height:1100px;
+    border:0;
+  }
+  .form-note a{ color:var(--gold-light); border-bottom:1px solid var(--line); }
+  .form-note a:hover{ border-color:var(--gold-light); }
+  @media (max-width:640px){
+    .form-embed{ border-radius:10px; }
+    .form-embed iframe{ height:1300px; }
+  }
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -737,39 +758,14 @@
         <p class="lead">Tell us about your business and what your site needs to do. We'll follow up within one business day.</p>
       </div>
 
-      <form class="contact-form reveal" id="contactForm" onsubmit="return handleSubmit(event)">
-        <div class="form-row">
-          <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-          </div>
-          <div>
-            <label for="business">Business Name</label>
-            <input type="text" id="business" name="business">
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div>
-            <label for="type">Project Type</label>
-            <select id="type" name="type">
-              <option>New Website</option>
-              <option>Rebuild / Redesign</option>
-              <option>Ongoing Support</option>
-              <option>Something Else</option>
-            </select>
-          </div>
-        </div>
-        <div class="full">
-          <label for="message">What do you need?</label>
-          <textarea id="message" name="message" required placeholder="A quick note on your business and what the site needs to do."></textarea>
-        </div>
-        <button type="submit" class="btn-primary">Send It Over</button>
-        <p class="form-note">Prefer email? Reach out directly and we'll take it from there.</p>
-      </form>
+      <div class="form-embed reveal">
+        <iframe
+          src="https://fill.formnx.com/f/new-client-request-30eb68"
+          title="New Client Project Request Form"
+          loading="lazy"
+          allow="clipboard-write"></iframe>
+      </div>
+      <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/new-client-request-30eb68" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
 
       <p class="existing-client-nudge reveal">Already a client? <a href="#requests">Request a change instead →</a></p>
     </div>
@@ -784,55 +780,14 @@
         <p>Already working with us? Tell us what needs to update on your site, part, or model, and we'll get it scheduled. No need to start a new project.</p>
       </div>
 
-      <form class="contact-form request-form reveal" id="requestForm" onsubmit="return handleRequestSubmit(event)">
-        <div class="form-row">
-          <div>
-            <label for="req-name">Name</label>
-            <input type="text" id="req-name" name="name" required>
-          </div>
-          <div>
-            <label for="req-site">Site / Project Name</label>
-            <input type="text" id="req-site" name="site" required placeholder="e.g. Vaughn Sweetz">
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="req-email">Email</label>
-            <input type="email" id="req-email" name="email" required>
-          </div>
-          <div>
-            <label for="req-url">Site URL (if applicable)</label>
-            <input type="text" id="req-url" name="url" placeholder="maskedocho.github.io/...">
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="req-changetype">Type of Change</label>
-            <select id="req-changetype" name="changetype">
-              <option>Content Update (text, images, prices)</option>
-              <option>Design Change</option>
-              <option>Bug / Something's Broken</option>
-              <option>New Feature</option>
-              <option>3D Print / CAD Revision</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label for="req-urgency">Urgency</label>
-            <select id="req-urgency" name="urgency">
-              <option>No rush</option>
-              <option>This week</option>
-              <option>Urgent</option>
-            </select>
-          </div>
-        </div>
-        <div class="full">
-          <label for="req-message">Describe the change</label>
-          <textarea id="req-message" name="message" required placeholder="What needs to change, and where?"></textarea>
-        </div>
-        <button type="submit" class="btn-primary">Submit Request</button>
-        <p class="form-note">Have a screenshot to share? Reply to your confirmation email with it attached.</p>
-      </form>
+      <div class="form-embed reveal">
+        <iframe
+          src="https://fill.formnx.com/f/existing-client-form-39ab15"
+          title="Existing Client Change Request Form"
+          loading="lazy"
+          allow="clipboard-write"></iframe>
+      </div>
+      <p class="form-note">Form not loading? <a href="https://fill.formnx.com/f/existing-client-form-39ab15" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
     </div>
   </section>
 
@@ -869,35 +824,6 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
-
-  // form handling (placeholder: wire to FormNX/webhook later)
-  function handleSubmit(e){
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    const original = btn.textContent;
-    btn.textContent = 'Sent ✓';
-    btn.style.opacity = '0.7';
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.style.opacity = '1';
-      e.target.reset();
-    }, 2400);
-  }
-
-  // existing-client change request handling (placeholder: wire to FormNX/webhook later)
-  function handleRequestSubmit(e){
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    const original = btn.textContent;
-    btn.textContent = 'Request Sent ✓';
-    btn.style.opacity = '0.7';
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.style.opacity = '1';
-      e.target.reset();
-    }, 2400);
-    return false;
-  }
 </script>
 
 </body>
